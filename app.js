@@ -78,8 +78,7 @@ addClasses();
 
 // a function to get the required covid-19 data on a chosen region with all its countries and call the function to draw the graph.
 async function fetchByRegion(region) {
-    loadingScreen.classList.toggle("display-none");
-    dropDownListEl.classList.remove("display-none");
+    loadingScreen.classList.toggle("display-none"); // shows the loading screen.
     try {
         const regionData = await axios.get(`${proxy}https://restcountries.herokuapp.com/api/v1${region}`); // fetching the countries in a given region.
         dropDownListEl.innerHTML = ""; // clearing the drop down list for a new set of country names.
@@ -109,11 +108,13 @@ async function fetchByRegion(region) {
         console.log("failed", err);
     }
     loadingScreen.classList.toggle("display-none"); // hiding the loading screen.
+    dropDownDiv.classList.remove("display-none"); // shows the drop down list.
+    canvasDiv.classList.remove("display-none"); // shows the canvas.
 }
 
 // a function to get the required covid-19 data on a chosen country and call the function to draw the graph.
 async function fetchByCountry(country) {
-    loadingScreen.classList.toggle("display-none");
+    loadingScreen.classList.toggle("display-none"); // shows the loading screen.
     try {
         myChart.destroy(); // reset the graph.
         const fetchedCovidyData = await axios.get(`${proxy}http://corona-api.com/countries/${country}`); // fetching the covid-19 data.
@@ -263,7 +264,8 @@ function addClasses() {
     criticalEl.classList.add("btn");
 
     // other elements.
+    canvasDiv.classList.add("display-none");
     canvasDiv.classList.add("canvas-container");
+    dropDownDiv.classList.add("display-none");
     dropDownDiv.classList.add("container")
-    dropDownListEl.classList.add("display-none");
 }

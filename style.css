@@ -4,13 +4,16 @@
     box-sizing: border-box;
 }
 
+body {
+    background: #d3d3d3;
+}
+
 .main {
-    height: 100vh;
-    width: 100%;
+    height: 100vmin;
+    /* width: 100%; */
     display: flex;
     flex-direction: column;
     align-items: center;
-    background: #d3d3d3;
 }
 
 .loading-screen {
@@ -24,7 +27,7 @@
 }
 
 .display-none {
-    display: none;
+    display: none !important; 
 }
 
 .spinner {
