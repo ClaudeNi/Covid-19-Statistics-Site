@@ -2,6 +2,16 @@
 
 const proxy = "https://intense-mesa-62220.herokuapp.com/";
 
+const loadingScreen = document.createElement("div");
+loadingScreen.classList.add("display-none");
+loadingScreen.classList.add("loading-screen");
+document.body.appendChild(loadingScreen);
+
+const spinnerEl = document.createElement("div");
+spinnerEl.classList.add("spinner");
+loadingScreen.appendChild(spinnerEl);
+
+
 const confirmedEl = document.createElement("button");
 const deathsEl = document.createElement("button");
 const recoveredEl = document.createElement("button");
@@ -42,51 +52,61 @@ worldEl.textContent = "World";
 firstDropDownOptionEl.textContent = "Choose a country";
 
 confirmedEl.addEventListener("click", () => {
+    loadingScreen.classList.toggle("display-none");
     graphFor = "confirmed";
     fetchByRegion(currentRegion);
 });
 
 deathsEl.addEventListener("click", () => {
+    loadingScreen.classList.toggle("display-none");
     graphFor = "deaths";
     fetchByRegion(currentRegion);
 });
 
 recoveredEl.addEventListener("click", () => {
+    loadingScreen.classList.toggle("display-none");
     graphFor = "recovered";
     fetchByRegion(currentRegion);
 });
 
 criticalEl.addEventListener("click", () => {
+    loadingScreen.classList.toggle("display-none");
     graphFor = "critical";
     fetchByRegion(currentRegion);
 });
 
 asiaEl.addEventListener("click", () => {
+    loadingScreen.classList.toggle("display-none");
     fetchByRegion("/region/Asia");
     currentRegion = "/region/Asia";
 });
 
 europeEl.addEventListener("click", () => {
+    loadingScreen.classList.toggle("display-none");
     fetchByRegion("/region/Europe");
     currentRegion = "/region/Europe";
 });
 
 africaEl.addEventListener("click", () => {
+    loadingScreen.classList.toggle("display-none");
     fetchByRegion("/region/Africa");
     currentRegion = "/region/Africa";
 });
 
 americasEl.addEventListener("click", () => {
+    loadingScreen.classList.toggle("display-none");
     fetchByRegion("/region/Americas");
     currentRegion = "/region/Americas";
 });
 
 worldEl.addEventListener("click", () => {
+    loadingScreen.classList.toggle("display-none");
     fetchByRegion("");
     currentRegion = "";
 });
 
 dropDownListEl.addEventListener("input", (e) => {
+    loadingScreen.classList.toggle("display-none");
     fetchByCountry(e.target.selectedOptions[0].getAttribute("code"));
 });
 
@@ -120,6 +140,7 @@ async function fetchByRegion(region) {
     } catch (err) {
         console.log("failed", err);
     }
+    loadingScreen.classList.toggle("display-none");
 }
 
 async function fetchByCountry(country) {
@@ -141,6 +162,7 @@ async function fetchByCountry(country) {
     } catch (err) {
         console.log("failed to fetch", err);
     }
+    loadingScreen.classList.toggle("display-none");
 }
 
 function drawGraph(graphType, graphLabelsArr, graphFor, graphDataArr, graphColorsArr) {
