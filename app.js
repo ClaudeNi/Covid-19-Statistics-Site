@@ -1,5 +1,9 @@
 // https://intense-mesa-62220.herokuapp.com/
 
+const confirmedEl = document.createElement("button");
+const deathsEl = document.createElement("button");
+const recoveredEl = document.createElement("button");
+const criticalEl = document.createElement("button");
 const asiaEl = document.createElement("button");
 const europeEl = document.createElement("button");
 const africaEl = document.createElement("button");
@@ -11,7 +15,12 @@ const canvasEl = document.createElement("canvas");
 let myChart = new Chart(canvasEl, {})
 let graphType = "bar";
 let graphFor = "confirmed";
+let currentRegion = "";
 
+document.body.appendChild(confirmedEl);
+document.body.appendChild(deathsEl);
+document.body.appendChild(recoveredEl);
+document.body.appendChild(criticalEl);
 document.body.appendChild(asiaEl);
 document.body.appendChild(europeEl);
 document.body.appendChild(africaEl);
@@ -20,11 +29,35 @@ document.body.appendChild(worldEl);
 document.body.appendChild(dropDownListEl)
 document.body.appendChild(canvasEl);
 
+confirmedEl.textContent = "Confirmed";
+deathsEl.textContent = "Deaths";
+recoveredEl.textContent = "Recovered";
+criticalEl.textContent = "Critical";
 asiaEl.textContent = "Asia";
 europeEl.textContent = "Europe";
 africaEl.textContent = "Africa";
 americasEl.textContent = "Americas";
 worldEl.textContent = "World";
+
+confirmedEl.addEventListener("click", () => {
+    graphFor = "confirmed";
+    fetchCountriesByRegion(currentRegion);
+});
+
+deathsEl.addEventListener("click", () => {
+    graphFor = "deaths";
+    fetchCountriesByRegion(currentRegion);
+});
+
+recoveredEl.addEventListener("click", () => {
+    graphFor = "recovered";
+    fetchCountriesByRegion(currentRegion);
+});
+
+criticalEl.addEventListener("click", () => {
+    graphFor = "critical";
+    fetchCountriesByRegion(currentRegion);
+});
 
 asiaEl.addEventListener("click", () => {
     fetchCountriesByRegion("/region/Asia");
