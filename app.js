@@ -1,5 +1,7 @@
 // https://intense-mesa-62220.herokuapp.com/
 
+const proxy = "https://intense-mesa-62220.herokuapp.com/";
+
 const confirmedEl = document.createElement("button");
 const deathsEl = document.createElement("button");
 const recoveredEl = document.createElement("button");
@@ -10,6 +12,7 @@ const africaEl = document.createElement("button");
 const americasEl = document.createElement("button");
 const worldEl = document.createElement("button");
 const dropDownListEl = document.createElement("select");
+const firstDropDownOptionEl = document.createElement("option");
 
 const canvasEl = document.createElement("canvas");
 let myChart = new Chart(canvasEl, {})
@@ -26,8 +29,6 @@ document.body.appendChild(europeEl);
 document.body.appendChild(africaEl);
 document.body.appendChild(americasEl);
 document.body.appendChild(worldEl);
-document.body.appendChild(dropDownListEl)
-document.body.appendChild(canvasEl);
 
 confirmedEl.textContent = "Confirmed";
 deathsEl.textContent = "Deaths";
@@ -38,51 +39,63 @@ europeEl.textContent = "Europe";
 africaEl.textContent = "Africa";
 americasEl.textContent = "Americas";
 worldEl.textContent = "World";
+firstDropDownOptionEl.textContent = "Choose a country";
 
 confirmedEl.addEventListener("click", () => {
     graphFor = "confirmed";
-    fetchCountriesByRegion(currentRegion);
+    fetchByRegion(currentRegion);
 });
 
 deathsEl.addEventListener("click", () => {
     graphFor = "deaths";
-    fetchCountriesByRegion(currentRegion);
+    fetchByRegion(currentRegion);
 });
 
 recoveredEl.addEventListener("click", () => {
     graphFor = "recovered";
-    fetchCountriesByRegion(currentRegion);
+    fetchByRegion(currentRegion);
 });
 
 criticalEl.addEventListener("click", () => {
     graphFor = "critical";
-    fetchCountriesByRegion(currentRegion);
+    fetchByRegion(currentRegion);
 });
 
 asiaEl.addEventListener("click", () => {
-    fetchCountriesByRegion("/region/Asia");
+    fetchByRegion("/region/Asia");
+    currentRegion = "/region/Asia";
 });
 
 europeEl.addEventListener("click", () => {
-    fetchCountriesByRegion("/region/Europe");
+    fetchByRegion("/region/Europe");
+    currentRegion = "/region/Europe";
 });
 
 africaEl.addEventListener("click", () => {
-    fetchCountriesByRegion("/region/Africa");
+    fetchByRegion("/region/Africa");
+    currentRegion = "/region/Africa";
 });
 
 americasEl.addEventListener("click", () => {
-    fetchCountriesByRegion("/region/Americas");
+    fetchByRegion("/region/Americas");
+    currentRegion = "/region/Americas";
 });
 
 worldEl.addEventListener("click", () => {
-    fetchCountriesByRegion("");
+    fetchByRegion("");
+    currentRegion = "";
 });
 
-async function fetchCountriesByRegion(region) {
+dropDownListEl.addEventListener("input", (e) => {
+    fetchByCountry(e.target.selectedOptions[0].getAttribute("code"));
+});
+
+async function fetchByRegion(region) {
     try {
-        const regionData = await axios.get('https://intense-mesa-62220.herokuapp.com/https://restcountries.herokuapp.com/api/v1' + region);
+        const regionData = await axios.get(`${proxy}https://restcountries.herokuapp.com/api/v1${region}`);
         dropDownListEl.innerHTML = "";
+        document.body.appendChild(dropDownListEl)
+        dropDownListEl.appendChild(firstDropDownOptionEl);
         myChart.destroy();
         const graphLabelsArr = [[],[]];
         const graphDataArr = [];
@@ -90,6 +103,7 @@ async function fetchCountriesByRegion(region) {
             const dropDownOptionEl = document.createElement("option");
             dropDownListEl.appendChild(dropDownOptionEl);
             dropDownOptionEl.textContent = country.name.common;
+            dropDownOptionEl.setAttribute("code", country.cca2);
             graphLabelsArr[0].push(country.name.common);
             graphLabelsArr[1].push(country.cca2);
         }
@@ -97,13 +111,35 @@ async function fetchCountriesByRegion(region) {
             if (country == "XK") {
                 continue;
             }
-            const countryCovidData = await axios.get('https://intense-mesa-62220.herokuapp.com/http://corona-api.com/countries/' + country);
+            const countryCovidData = await axios.get(`${proxy}http://corona-api.com/countries/${country}`);
             graphDataArr.push(countryCovidData.data.data.latest_data[graphFor]);
         }
         const graphColorsArr = grabRandomColors(graphDataArr.length);
         drawGraph(graphType, graphLabelsArr[0], graphFor, graphDataArr, graphColorsArr);
+        document.body.appendChild(canvasEl);
     } catch (err) {
         console.log("failed", err);
+    }
+}
+
+async function fetchByCountry(country) {
+    try {
+        myChart.destroy();
+        const fetchedCovidyData = await axios.get(`${proxy}http://corona-api.com/countries/${country}`);
+        const countryCovidData = fetchedCovidyData.data.data
+        console.log(countryCovidData);
+        const countryDataObj = {
+            "Total Cases": countryCovidData.latest_data.confirmed,
+            "New Cases": countryCovidData.today.confirmed,
+            "Total Deaths": countryCovidData.latest_data.deaths,
+            "New Deaths": countryCovidData.today.deaths,
+            "Total Recovered": countryCovidData.latest_data.recovered,
+            "Total Critical": countryCovidData.latest_data.critical,
+        }
+        const graphColorsArr = grabRandomColors(6);
+        drawGraph(graphType, Object.keys(countryDataObj), countryCovidData.name, Object.values(countryDataObj), graphColorsArr);
+    } catch (err) {
+        console.log("failed to fetch", err);
     }
 }
 
