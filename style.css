@@ -4,13 +4,13 @@
     box-sizing: border-box;
 }
 
-body {
+.main {
     height: 100vh;
-}
-
-.canvas-container {
-    height: 100vh;
-    width: 30%;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background: #d3d3d3;
 }
 
 .loading-screen {
@@ -41,24 +41,63 @@ body {
     border-bottom:6px solid rgba(0,174,239,.15);
     border-top:6px solid rgba(0,174,239,.8);
     border-radius:100%;
-    }
+}
     
-    @-webkit-keyframes rotation {
+@-webkit-keyframes rotation {
     from {-webkit-transform: rotate(0deg);}
     to {-webkit-transform: rotate(359deg);}
-    }
+}
     
-    @-moz-keyframes rotation {
+@-moz-keyframes rotation {
     from {-moz-transform: rotate(0deg);}
     to {-moz-transform: rotate(359deg);}
-    }
+}
     
-    @-o-keyframes rotation {
+@-o-keyframes rotation {
     from {-o-transform: rotate(0deg);}
     to {-o-transform: rotate(359deg);}
-    }
+}
     
-    @keyframes rotation {
+@keyframes rotation {
     from {transform: rotate(0deg);}
     to {transform: rotate(359deg);}
-    }
+}
+
+.canvas-container {
+    margin: 1rem 0;
+    padding: 1rem;
+    height: fit-content;
+    width: 60%;
+    border-radius: 20px;
+    background: #f3f3f3;
+}
+
+.container {
+    margin: 1rem 0;
+    padding: 1rem;
+    border-radius: 20px;
+    width: 70%;
+    display: flex;
+    justify-content: space-between;
+    background: #f3f3f3;
+}
+
+.btn {
+    color: #fff;
+    font-size: 2rem;
+    border-radius: 10px;
+    padding: 1rem;
+    background: #0090C0;
+    border: 0;
+    cursor: pointer;
+}
+
+.btn:hover {
+    background: #007DA7;
+}
+
+select {
+    width: 100%;
+    font-size: 2rem;
+    border-radius: 10px;
+}
