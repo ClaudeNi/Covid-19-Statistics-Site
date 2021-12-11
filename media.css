@@ -5,6 +5,10 @@
 }
 
 @media(max-width: 1600px) {
+    .title-text {
+        width: 80%;
+    }
+    
     .container {
         width: 80%;
     }
@@ -15,6 +19,10 @@
 }
 
 @media(max-width: 1200px) {
+    .title-text {
+        width: 90%;
+    }
+
     .container {
         width: 90%;
     }
@@ -39,5 +47,11 @@
 
     .canvas-container {
         width: 95%;
+    }
+}
+
+@media(max-width: 700px) {
+    .title-text {
+        font-size: 1.5rem;
     }
 }

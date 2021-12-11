@@ -1,22 +1,17 @@
 const proxy = "https://intense-mesa-62220.herokuapp.com/";
 
-const mainDiv = document.createElement("div");
-
-// window.addEventListener("resize", () => {
-//     if(window.innerHeight > window.innerWidth){
-//         alert("Please use Landscape!");
-//     }
-// });
+const mainDiv = document.createElement("div");  
 
 // loading screen elements
 const loadingScreen = document.createElement("div");
-const spinnerTextEl = document.createElement("h3");
+const spinnerTextEl = document.createElement("span");
 const spinnerEl = document.createElement("img");
 spinnerEl.src = "./covid.png";
 
 
 // regions elements
 const regionsDiv = document.createElement("div");
+const regionText = document.createElement("span");
 const asiaEl = document.createElement("button");
 const europeEl = document.createElement("button");
 const africaEl = document.createElement("button");
@@ -25,6 +20,7 @@ const worldEl = document.createElement("button");
 
 // statistics elements
 const statisticsDiv = document.createElement("div");
+const statisticsText = document.createElement("span")
 const confirmedEl = document.createElement("button");
 const deathsEl = document.createElement("button");
 const recoveredEl = document.createElement("button");
@@ -41,6 +37,7 @@ let myChart = new Chart(canvasEl, {})
 let graphType = "bar";
 let graphFor = "confirmed";
 let currentRegion = "";
+let isShowingCountry = false;
 
 appendAllChildren();
 giveTexts();
@@ -85,8 +82,115 @@ addClasses();
     });
 }
 
+// give text to the necessary elements.
+function giveTexts() {
+    // loading screen.
+    spinnerTextEl.textContent = "Loading...";
+
+    // region buttons texts.
+    regionText.textContent = "Choose a region for all the countries in it.";
+    asiaEl.textContent = "Asia";
+    europeEl.textContent = "Europe";
+    africaEl.textContent = "Africa";
+    americasEl.textContent = "Americas";
+    worldEl.textContent = "World";
+
+    // 4 stats buttons texts.
+    statisticsText.textContent = "Choose one of the following options. (confirmed is the default)"
+    confirmedEl.textContent = "Confirmed";
+    deathsEl.textContent = "Deaths";
+    recoveredEl.textContent = "Recovered";
+    criticalEl.textContent = "Critical";
+
+    // drop down list text.
+    firstDropDownOptionEl.textContent = "Choose a country";
+}
+
+// append children, mostly to body.
+function appendAllChildren() {
+    document.body.appendChild(mainDiv);
+
+    // loading screen.
+    mainDiv.appendChild(loadingScreen);
+    loadingScreen.appendChild(spinnerTextEl);
+    loadingScreen.appendChild(spinnerEl);
+
+    // containers.
+    mainDiv.appendChild(regionText);
+    mainDiv.appendChild(regionsDiv);
+    mainDiv.appendChild(statisticsText);
+    mainDiv.appendChild(statisticsDiv);
+    mainDiv.appendChild(dropDownDiv);
+    mainDiv.appendChild(canvasDiv);
+
+    // region buttons.
+    regionsDiv.appendChild(asiaEl);
+    regionsDiv.appendChild(europeEl);
+    regionsDiv.appendChild(africaEl);
+    regionsDiv.appendChild(americasEl);
+    regionsDiv.appendChild(worldEl);
+
+    // 4 stats buttons.
+    statisticsDiv.appendChild(confirmedEl);
+    statisticsDiv.appendChild(deathsEl);
+    statisticsDiv.appendChild(recoveredEl);
+    statisticsDiv.appendChild(criticalEl);
+
+    // other.
+    dropDownDiv.appendChild(dropDownListEl);
+}
+
+// add the appropriate classes to style the page.
+function addClasses() {
+    mainDiv.classList.add("main");
+
+    // loading screen.
+    loadingScreen.classList.add("display-none");
+    loadingScreen.classList.add("loading-screen");
+    spinnerTextEl.classList.add("spinner-text");
+    spinnerEl.classList.add("spinner");
+
+    // region elements.
+    regionsDiv.classList.add("container");
+    regionText.classList.add("title-text");
+    asiaEl.classList.add("btn");
+    europeEl.classList.add("btn");
+    africaEl.classList.add("btn");
+    americasEl.classList.add("btn");
+    worldEl.classList.add("btn");
+    
+    // statistics elements.
+    statisticsDiv.classList.add("container");
+    statisticsText.classList.add("title-text");
+    confirmedEl.classList.add("btn");
+    deathsEl.classList.add("btn");
+    recoveredEl.classList.add("btn");
+    criticalEl.classList.add("btn");
+
+    // other elements.
+    canvasDiv.classList.add("display-none");
+    canvasDiv.classList.add("canvas-container");
+    dropDownDiv.classList.add("display-none");
+    dropDownDiv.classList.add("container")
+}
+
+// region button event listener runner.
+function regionFunction(str) {
+    fetchByRegion(str);
+    currentRegion = str;
+}
+
+// statistics button event listener runner.
+function statisticsFunction(str) {
+    if (graphFor != str || isShowingCountry) {
+        graphFor = str;
+        fetchByRegion(currentRegion);
+    }
+}
+
 // a function to get the required covid-19 data on a chosen region with all its countries and call the function to draw the graph.
 async function fetchByRegion(region) {
+    isShowingCountry = false;
     firstDropDownOptionEl.disabled = false; // makes it so the list starts at this option for it to be disabled later.
     loadingScreen.classList.toggle("display-none"); // shows the loading screen.
     try {
@@ -124,6 +228,7 @@ async function fetchByRegion(region) {
 
 // a function to get the required covid-19 data on a chosen country and call the function to draw the graph.
 async function fetchByCountry(country) {
+    isShowingCountry = true;
     firstDropDownOptionEl.disabled = true; // makes it so you can't choose the first option.
     loadingScreen.classList.toggle("display-none"); // shows the loading screen.
     try {
@@ -185,102 +290,4 @@ function grabRandomColors(length) {
         arr.push(`rgba(${rand1},${rand2},${rand3},0.5)`); // a random color from 3 numbers with some transparency.
     }
     return arr;
-}
-
-// region button event listener runner.
-function regionFunction(str) {
-    fetchByRegion(str);
-    currentRegion = str;
-}
-
-// statistics button event listener runner.
-function statisticsFunction(str) {
-    graphFor = str;
-    fetchByRegion(currentRegion);
-}
-
-// give text to the necessary elements.
-function giveTexts() {
-    // loading screen.
-    spinnerTextEl.textContent = "Loading...";
-
-    // 4 stats buttons texts.
-    confirmedEl.textContent = "Confirmed";
-    deathsEl.textContent = "Deaths";
-    recoveredEl.textContent = "Recovered";
-    criticalEl.textContent = "Critical";
-
-    // region buttons texts.
-    asiaEl.textContent = "Asia";
-    europeEl.textContent = "Europe";
-    africaEl.textContent = "Africa";
-    americasEl.textContent = "Americas";
-    worldEl.textContent = "World";
-
-    // drop down list text.
-    firstDropDownOptionEl.textContent = "Choose a country";
-}
-
-// append children, mostly to body.
-function appendAllChildren() {
-    document.body.appendChild(mainDiv);
-
-    // loading screen.
-    mainDiv.appendChild(loadingScreen);
-    loadingScreen.appendChild(spinnerTextEl);
-    loadingScreen.appendChild(spinnerEl);
-
-    // containers.
-    mainDiv.appendChild(regionsDiv);
-    mainDiv.appendChild(statisticsDiv);
-    mainDiv.appendChild(dropDownDiv);
-    mainDiv.appendChild(canvasDiv);
-
-    // region buttons.
-    regionsDiv.appendChild(asiaEl);
-    regionsDiv.appendChild(europeEl);
-    regionsDiv.appendChild(africaEl);
-    regionsDiv.appendChild(americasEl);
-    regionsDiv.appendChild(worldEl);
-
-    // 4 stats buttons.
-    statisticsDiv.appendChild(confirmedEl);
-    statisticsDiv.appendChild(deathsEl);
-    statisticsDiv.appendChild(recoveredEl);
-    statisticsDiv.appendChild(criticalEl);
-
-    // other.
-    dropDownDiv.appendChild(dropDownListEl);
-}
-
-// add the appropriate classes to style the page.
-function addClasses() {
-    mainDiv.classList.add("main");
-
-    // loading screen.
-    loadingScreen.classList.add("display-none");
-    loadingScreen.classList.add("loading-screen");
-    spinnerTextEl.classList.add("spinner-text");
-    spinnerEl.classList.add("spinner");
-
-    // region elements.
-    regionsDiv.classList.add("container");
-    asiaEl.classList.add("btn");
-    europeEl.classList.add("btn");
-    africaEl.classList.add("btn");
-    americasEl.classList.add("btn");
-    worldEl.classList.add("btn");
-    
-    // statistics elements.
-    statisticsDiv.classList.add("container");
-    confirmedEl.classList.add("btn");
-    deathsEl.classList.add("btn");
-    recoveredEl.classList.add("btn");
-    criticalEl.classList.add("btn");
-
-    // other elements.
-    canvasDiv.classList.add("display-none");
-    canvasDiv.classList.add("canvas-container");
-    dropDownDiv.classList.add("display-none");
-    dropDownDiv.classList.add("container")
 }
