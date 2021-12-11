@@ -2,6 +2,12 @@ const proxy = "https://intense-mesa-62220.herokuapp.com/";
 
 const mainDiv = document.createElement("div");
 
+// window.addEventListener("resize", () => {
+//     if(window.innerHeight > window.innerWidth){
+//         alert("Please use Landscape!");
+//     }
+// });
+
 // loading screen elements
 const loadingScreen = document.createElement("div");
 const spinnerTextEl = document.createElement("h3");
@@ -81,6 +87,7 @@ addClasses();
 
 // a function to get the required covid-19 data on a chosen region with all its countries and call the function to draw the graph.
 async function fetchByRegion(region) {
+    firstDropDownOptionEl.disabled = false; // makes it so the list starts at this option for it to be disabled later.
     loadingScreen.classList.toggle("display-none"); // shows the loading screen.
     try {
         const regionData = await axios.get(`${proxy}https://restcountries.herokuapp.com/api/v1${region}`); // fetching the countries in a given region.
@@ -117,6 +124,7 @@ async function fetchByRegion(region) {
 
 // a function to get the required covid-19 data on a chosen country and call the function to draw the graph.
 async function fetchByCountry(country) {
+    firstDropDownOptionEl.disabled = true; // makes it so you can't choose the first option.
     loadingScreen.classList.toggle("display-none"); // shows the loading screen.
     try {
         myChart.destroy(); // reset the graph.
@@ -152,8 +160,8 @@ function drawGraph(graphType, graphLabelsArr, graphFor, graphDataArr, graphColor
             datasets: [{
                 label: "Covid-19 " + graphFor,
                 data: graphDataArr,
-                backgroundColor: graphColorsArr[0],
-                borderColor: graphColorsArr[1],
+                backgroundColor: graphColorsArr,
+                borderColor: ['rgba(0,0,0,1)'],
                 borderWidth: 1
             }]
         },
@@ -169,13 +177,12 @@ function drawGraph(graphType, graphLabelsArr, graphFor, graphDataArr, graphColor
 
 // grab random colors for the graph drawing.
 function grabRandomColors(length) {
-    const arr = [[],[]];
+    const arr = [];
     for (let i = 0; i < length; i++) {
-        const rand1 = Math.random() * 255;
-        const rand2 = Math.random() * 255;
-        const rand3 = Math.random() * 255;
-        arr[0].push(`rgba(${rand1},${rand2},${rand3},0.5)`); // a random color from 3 numbers with some transparency.
-        arr[1].push(`rgba(${rand1},${rand2},${rand3},1)`); // a random color from the same 3 numbers with no tranparency.
+        const rand1 = Math.floor(Math.random() * 255);
+        const rand2 = Math.floor(Math.random() * 255);
+        const rand3 = Math.floor(Math.random() * 255);
+        arr.push(`rgba(${rand1},${rand2},${rand3},0.5)`); // a random color from 3 numbers with some transparency.
     }
     return arr;
 }
