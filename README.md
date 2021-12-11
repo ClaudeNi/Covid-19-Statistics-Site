@@ -1,7 +1,6 @@
 # Covid-19-Statistics-Site
-weekend project where we use apis to create graphs on covid-19 in each country
+weekend project where we use apis to create graphs on covid-19 in each country  
 
-# Project Link
 [COVID WebApp](https://claudeni-covid19.netlify.com/)
 
 ## Info
