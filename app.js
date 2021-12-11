@@ -4,7 +4,10 @@ const mainDiv = document.createElement("div");
 
 // loading screen elements
 const loadingScreen = document.createElement("div");
-const spinnerEl = document.createElement("div");
+const spinnerTextEl = document.createElement("h3");
+const spinnerEl = document.createElement("img");
+spinnerEl.src = "./covid.png";
+
 
 // regions elements
 const regionsDiv = document.createElement("div");
@@ -171,7 +174,7 @@ function grabRandomColors(length) {
         const rand1 = Math.random() * 255;
         const rand2 = Math.random() * 255;
         const rand3 = Math.random() * 255;
-        arr[0].push(`rgba(${rand1},${rand2},${rand3},0.2)`); // a random color from 3 numbers with some transparency.
+        arr[0].push(`rgba(${rand1},${rand2},${rand3},0.5)`); // a random color from 3 numbers with some transparency.
         arr[1].push(`rgba(${rand1},${rand2},${rand3},1)`); // a random color from the same 3 numbers with no tranparency.
     }
     return arr;
@@ -191,6 +194,9 @@ function statisticsFunction(str) {
 
 // give text to the necessary elements.
 function giveTexts() {
+    // loading screen.
+    spinnerTextEl.textContent = "Loading...";
+
     // 4 stats buttons texts.
     confirmedEl.textContent = "Confirmed";
     deathsEl.textContent = "Deaths";
@@ -214,6 +220,7 @@ function appendAllChildren() {
 
     // loading screen.
     mainDiv.appendChild(loadingScreen);
+    loadingScreen.appendChild(spinnerTextEl);
     loadingScreen.appendChild(spinnerEl);
 
     // containers.
@@ -246,6 +253,7 @@ function addClasses() {
     // loading screen.
     loadingScreen.classList.add("display-none");
     loadingScreen.classList.add("loading-screen");
+    spinnerTextEl.classList.add("spinner-text");
     spinnerEl.classList.add("spinner");
 
     // region elements.
